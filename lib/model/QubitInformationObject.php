@@ -3384,4 +3384,42 @@ class QubitInformationObject extends BaseInformationObject
     $counterValue = $counter->getValue(array('sourceCulture' => true));
     return Qubit::generateIdentifierFromCounterAndMask($counterValue, sfConfig::get('app_identifier_mask', ''));
   }
+
+  public static function getAncestors(&$ancestor, $tableName = 'information_object', $root_id = 1, $currentDepth = 0, $maxDepth = 50)
+  {
+    if (!is_array($ancestor))
+    {
+      $ancestorArray[] = $ancestor;
+    }
+    else
+    {
+      $ancestorArray = $ancestor;
+    }
+    if (end($ancestorArray) == $root_id)
+    {
+      return $ancestorArray;
+    }
+
+    // Use SQL to get parent_id of last element of array
+    $sql = "SELECT t.id, t.parent_id";
+    $sql .= " FROM " . $tableName . " t";
+    $sql .= ' WHERE t.id=:id;';
+    $params = array(':id' => end($ancestorArray));
+    $row = QubitPdo::fetchOne($sql, $params);
+
+    // Add it to last element of array
+    $ancestorArray[] = $row->parent_id;
+    if ($row->parent_id == $root_id)
+    {
+      //sfContext::getInstance()->getLogger()->err('SBSBSB'.json_encode($ancestorArray));
+      return $ancestorArray;
+    }
+    // Is currentDepth >= maxDepth?  If so, trigger exception and display last 20 elements of array. should never be circular parentage.
+    if ($currentDepth >= $maxDepth)
+    {
+      die("circular looping: ".json_encode($ancestorArray));
+    }
+    // If not, call self passing array in and currentDepth, and maxDepth
+    return QubitInformationObject::getAncestors($ancestorArray, $tableName, $root_id, $currentDepth+1, $maxDepth);
+  }
 }

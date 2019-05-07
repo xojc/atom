@@ -586,7 +586,8 @@ abstract class BaseInformationObject extends QubitObject implements ArrayAccess
 
   public function addAncestorsCriteria(Criteria $criteria)
   {
-    return $criteria->add(QubitInformationObject::LFT, $this->lft, Criteria::LESS_THAN)->add(QubitInformationObject::RGT, $this->rgt, Criteria::GREATER_THAN);
+    //return $criteria->add(QubitInformationObject::LFT, $this->lft, Criteria::LESS_THAN)->add(QubitInformationObject::RGT, $this->rgt, Criteria::GREATER_THAN);
+    return $criteria->add(QubitInformationObject::ID, QubitInformationObject::getAncestors($this->id), Criteria::IN);
   }
 
   public function addDescendantsCriteria(Criteria $criteria)
