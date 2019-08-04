@@ -340,7 +340,7 @@ class QubitTerm extends BaseTerm
       }
     }
 
-    QubitSearch::getInstance()->delete($this);
+//    QubitSearch::getInstance()->delete($this);
 
     parent::delete($connection);
   }

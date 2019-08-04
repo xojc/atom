@@ -53,7 +53,7 @@ class QubitObjectTermRelation extends BaseObjectTermRelation
 
     if ($this->indexObjectOnDelete && $this->getObject() instanceof QubitInformationObject)
     {
-      QubitSearch::getInstance()->update($this->getObject());
+//      QubitSearch::getInstance()->update($this->getObject());
     }
   }
 

@@ -60,6 +60,7 @@ EOF;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $conn = $databaseManager->getDatabase('propel')->getConnection();
 
+/*
     $classesData = array(
       'QubitAccession' => array(
         'select'    => 'SELECT base.id, base.identifier',
@@ -97,6 +98,8 @@ EOF;
       'QubitTaxonomy' => array(
         'select'    => 'SELECT base.id, i18n.name',
         'i18nQuery' => true),
+*/
+$classesData = array(
       'QubitTerm' => array(
         'select'    => 'SELECT base.id, i18n.name',
         'i18nQuery' => true)

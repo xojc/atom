@@ -1149,7 +1149,7 @@ abstract class BaseTerm extends QubitObject implements ArrayAccess
     }
 
     $this->clear();
-    $this->deleteFromNestedSet($connection);
+//    $this->deleteFromNestedSet($connection);
 
     parent::delete($connection);
 
