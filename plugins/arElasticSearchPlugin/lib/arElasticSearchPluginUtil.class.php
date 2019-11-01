@@ -541,44 +541,47 @@ class arElasticSearchPluginUtil
     $statement = $conn->prepare($sql);
     $statement->execute(array($ioId));
 
-    foreach ($statement->fetch() as $field => $value)
+    while ($row = $statement->fetch())
     {
-      if (empty($value))
+      foreach($row as $field => $value)
       {
-        continue;
-      }
+        if (empty($value))
+        {
+          continue;
+        }
 
-      switch ($field)
-      {
-        case 'last_modified':
-          $premisData['lastModified'] =  arElasticSearchPluginUtil::convertDate($value);
+        switch ($field)
+        {
+          case 'last_modified':
+            $premisData['lastModified'] =  arElasticSearchPluginUtil::convertDate($value);
 
-          break;
+            break;
 
-        case 'date_ingested':
-          $premisData['dateIngested'] =  arElasticSearchPluginUtil::convertDate($value);
+          case 'date_ingested':
+            $premisData['dateIngested'] =  arElasticSearchPluginUtil::convertDate($value);
 
-          break;
+            break;
 
-        case 'mime_type':
-          $premisData['mimeType'] = $value;
+          case 'mime_type':
+            $premisData['mimeType'] = $value;
 
-          break;
+            break;
 
-        case 'size':
-          $premisData['size'] = $value;
+          case 'size':
+            $premisData['size'] = $value;
 
-          break;
+            break;
 
-        case 'filename':
-          $premisData['filename'] = $value;
+          case 'filename':
+            $premisData['filename'] = $value;
 
-          break;
+            break;
 
-        case 'puid':
-          $premisData['puid'] = $value;
+          case 'puid':
+            $premisData['puid'] = $value;
 
-          break;
+            break;
+        }
       }
     }
 
@@ -593,7 +596,7 @@ class arElasticSearchPluginUtil
     $statement = $conn->prepare($sql);
     $statement->execute(array($ioId));
 
-    foreach ($statement->fetchAll(PDO::FETCH_OBJ) as $property)
+    while ($property = $statement->fetch(PDO::FETCH_OBJ))
     {
       $value = unserialize($property->value);
 
@@ -721,7 +724,7 @@ class arElasticSearchPluginUtil
     {
       foreach ($resultSet as $hit)
       {
-       array_push($hitIds, $hit->getId()); 
+       array_push($hitIds, $hit->getId());
       }
     }
 
