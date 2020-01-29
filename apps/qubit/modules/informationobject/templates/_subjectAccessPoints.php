@@ -12,13 +12,7 @@
     <ul>
       <?php foreach ($resource->getSubjectAccessPoints() as $item): ?>
         <li>
-          <?php foreach ($item->term->ancestors->andSelf()->orderBy('lft') as $key => $subject): ?>
-            <?php if (QubitTerm::ROOT_ID == $subject->id) continue; ?>
-            <?php if (1 < $key): ?>
-              &raquo;
-            <?php endif; ?>
-            <?php echo link_to($subject->__toString(), array($subject, 'module' => 'term')) ?>
-          <?php endforeach; ?>
+          <?php echo link_to($item->term->__toString(), array($item->term, 'module' => 'term')) ?>
         </li>
       <?php endforeach; ?>
     </ul>
