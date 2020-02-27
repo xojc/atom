@@ -40,7 +40,7 @@ class InformationObjectEditPhysicalObjectsAction extends DefaultEditAction
     $this->resource = $this->getRoute()->resource;
 
     // Check that this isn't the root
-    if (!isset($this->resource->parent))
+    if (property_exists($this->resource, 'parent') && !isset($this->resource->parent))
     {
       $this->forward404();
     }
@@ -128,7 +128,8 @@ class InformationObjectEditPhysicalObjectsAction extends DefaultEditAction
 
         $this->resource->save();
 
-        $this->redirect(array($this->resource, 'module' => 'informationobject'));
+        $module = ($resource instanceOf QubitInformationObject) ? 'informationobject' : 'accession';
+        $this->redirect(array($this->resource, 'module' => $module));
       }
     }
   }

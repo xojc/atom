@@ -90,7 +90,8 @@ EOF;
       QubitTaxonomy::ACCESSION_RESOURCE_TYPE_ID       => 'resourceTypes',
       QubitTaxonomy::ACCESSION_PROCESSING_STATUS_ID   => 'processingStatus',
       QubitTaxonomy::ACCESSION_PROCESSING_PRIORITY_ID => 'processingPriority',
-      QubitTaxonomy::ACCESSION_ALTERNATIVE_IDENTIFIER_TYPE_ID => 'alternativeIdentifierTypes'
+      QubitTaxonomy::ACCESSION_ALTERNATIVE_IDENTIFIER_TYPE_ID => 'alternativeIdentifierTypes',
+      QubitTaxonomy::PHYSICAL_OBJECT_TYPE_ID          => 'physicalObjectTypes'
     ));
 
     // Define import
@@ -164,6 +165,9 @@ EOF;
         'accessionNumber',
         'acquisitionType',
         'resourceType',
+        'physicalObjectName',
+        'physicalObjectLocation',
+        'physicalObjectType',
         'donorName',
         'donorStreetAddress',
         'donorCity',
@@ -243,57 +247,8 @@ EOF;
             }
           }
 
-          // Add alternative identifiers
-          $identifiers = $self->rowStatusVars['alternativeIdentifiers'];
-          $identifierNotes = $self->rowStatusVars['alternativeIdentifierNotes'];
-
-          if (!empty($identifiers) || !empty($identifierNotes))
-          {
-            $identifierTypes = $self->rowStatusVars['alternativeIdentifierTypes'];
-
-            for ($index = 0; $index < max(count($identifiers), count($identifierNotes)); $index++)
-            {
-              $identifier = (empty($identifiers[$index])) ? null : $identifiers[$index];
-
-              if (!empty($identifier) || !empty($identifierNotes[$index]))
-              {
-                $otherName = new QubitOtherName;
-                $otherName->object = $self->object;
-                $otherName->name = $identifier;
-
-                // Set type attribute, determine alternative identifier type ID if a type name's specified
-                $otherName->typeId = QubitTerm::ACCESSION_ALTERNATIVE_IDENTIFIER_DEFAULT_TYPE_ID;
-                if (!empty($typeName = $identifierTypes[$index]))
-                {
-                  // Create new accession identifier type term, if necessary
-                  if (empty($typeId = array_search_case_insensitive($typeName, $self->status['alternativeIdentifierTypes'][$self->columnValue('culture')])))
-                  {
-                    $term = new QubitTerm;
-                    $term->parentId = QubitTerm::ROOT_ID; 
-                    $term->taxonomyId = QubitTaxonomy::ACCESSION_ALTERNATIVE_IDENTIFIER_TYPE_ID;
-                    $term->setName($typeName, array('culture' => $self->columnValue('culture')));
-                    $term->sourceCulture = $self->columnValue('culture');
-                    $term->save();
-
-                    $self->status['alternativeIdentifierTypes'][$self->columnValue('culture')][$term->id] = $typeName;
-
-                    $typeId = $term->id;
-                  }
-
-                  $otherName->typeId = $typeId;
-                }
-
-                // Set type note, if specified
-                if (!empty($note = $identifierNotes[$index]))
-                {
-                  $otherName->setNote($note, array('culture' => $self->columnValue('culture')));
-                }
-
-                $otherName->culture = $self->columnValue('culture');
-                $otherName->save();
-              }
-            }
-          }
+          // Add physical objects
+          csvImportBaseTask::importPhysicalObjects($self);
 
           // Add events
           csvImportBaseTask::importEvents($self);
