@@ -39,12 +39,6 @@ class DefaultEditPhysicalObjectsAction extends DefaultEditAction
 
     $this->resource = $this->getRoute()->resource;
 
-    // Check that this isn't the root
-    if (property_exists($this->resource, 'parent') && !isset($this->resource->parent))
-    {
-      $this->forward404();
-    }
-
     // Check user authorization
     if (!QubitAcl::check($this->resource, 'update') && !$this->getUser()->hasGroup(QubitAclGroup::EDITOR_ID))
     {

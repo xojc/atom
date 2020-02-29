@@ -205,7 +205,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><?php echo link_to(__('Create new rights'), array($resource,  'sf_route' => 'slug/default', 'module' => 'right', 'action' => 'edit')) ?></li>
-            <li><?php echo link_to(__('Link physical storage'), array($resource, 'module' => 'informationobject', 'action' => 'editPhysicalObjects')) ?></li>
+            <li><?php echo link_to(__('Link physical storage'), array($resource, 'module' => 'default', 'action' => 'editPhysicalObjects')) ?></li>
           </ul>
         </div>
       </li>

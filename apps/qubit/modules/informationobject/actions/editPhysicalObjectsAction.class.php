@@ -31,7 +31,7 @@ class InformationObjectEditPhysicalObjectsAction extends DefaultEditPhysicalObje
     parent::earlyExecute();
 
     // Check that this isn't the root
-    if (property_exists($this->resource, 'parent') && !isset($this->resource->parent))
+    if (!isset($this->resource->parent))
     {
       $this->forward404();
     }
