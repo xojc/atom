@@ -27,6 +27,8 @@ class arSearchPopulateTask extends sfBaseTask
 {
   protected function configure()
   {
+    $this->addArgument('type', sfCommandArgument::OPTIONAL, 'Index only the given document type' , 'all');
+
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'qubit'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'cli'),
@@ -34,7 +36,8 @@ class arSearchPopulateTask extends sfBaseTask
       new sfCommandOption('ignore-descendants', null, sfCommandOption::PARAMETER_NONE, "Don't index resource's descendants (applies to --slug option only)."),
       new sfCommandOption('exclude-types', null, sfCommandOption::PARAMETER_OPTIONAL, 'Exclude document type(s) (command-separated) from indexing'),
       new sfCommandOption('show-types', null, sfCommandOption::PARAMETER_NONE, 'Show available document type(s), that can be excluded, before indexing'),
-      new sfCommandOption('update', null, sfCommandOption::PARAMETER_NONE, "Don't delete existing records before indexing.")));
+      new sfCommandOption('update', null, sfCommandOption::PARAMETER_NONE, "Don't delete existing records before indexing."),
+    ));
 
     $this->namespace = 'search';
     $this->name = 'populate';
@@ -60,7 +63,7 @@ EOF;
     // If show-types flag set, show types available to index
     if (!empty($options['show-types']))
     {
-      $this->log(sprintf('Available document types that can be excluded: %s', implode(', ', $this->availableDocumentTypes())));
+      $this->log(sprintf('Available document types: %s', implode(', ', $this->availableDocumentTypes())));
       $this->ask('Press the Enter key to continue indexing or CTRL-C to abort...');
     }
 
@@ -75,7 +78,18 @@ EOF;
     else
     {
       $populateOptions = array();
-      $populateOptions['excludeTypes'] = (!empty($options['exclude-types'])) ? explode(',', strtolower($options['exclude-types'])) : null;
+
+      if ('all' != $arguments['type'])
+      {
+        $populateOptions['type'] = $arguments['type'];
+      }
+
+      // Don't set 'excludeTypes' when 'type' is set
+      else if (!empty($options['exclude-types']))
+      {
+        $populateOptions['excludeTypes'] = explode(',', strtolower($options['exclude-types']));
+      }
+
       $populateOptions['update'] = $options['update'];
 
       QubitSearch::getInstance()->populate($populateOptions);
