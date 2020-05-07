@@ -527,7 +527,7 @@ EOF;
         if (array_key_exists('alternativeIdentifiers', $self->rowStatusVars) &&
             array_key_exists('alternativeIdentifierLabels', $self->rowStatusVars))
         {
-          setAlternativeIdentifiers(
+          csvImportTask::setAlternativeIdentifiers(
             $self->object,
             $self->rowStatusVars['alternativeIdentifiers'],
             $self->rowStatusVars['alternativeIdentifierLabels']
@@ -1059,24 +1059,24 @@ EOF;
 
     return $parentId;
   }
+
+  public static function setAlternativeIdentifiers($io, $altIds, $altIdLabels)
+  {
+    if (count($altIdLabels) !== count($altIds))
+    {
+      throw new sfException('Number of alternative ids does not match number of alt id labels');
+    }
+
+    for ($i = 0; $i < count($altIds); $i++)
+    {
+      $io->addProperty($altIdLabels[$i], $altIds[$i], array('scope' => 'alternativeIdentifiers'));
+    }
+  }
 }
 
 function array_search_case_insensitive($search, $array)
 {
   return array_search(strtolower($search), array_map('strtolower', $array));
-}
-
-function setAlternativeIdentifiers($io, $altIds, $altIdLabels)
-{
-  if (count($altIdLabels) !== count($altIds))
-  {
-    throw new sfException('Number of alternative ids does not match number of alt id labels');
-  }
-
-  for ($i = 0; $i < count($altIds); $i++)
-  {
-    $io->addProperty($altIdLabels[$i], $altIds[$i], array('scope' => 'alternativeIdentifiers'));
-  }
 }
 
 /**
