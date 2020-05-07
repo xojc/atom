@@ -273,7 +273,7 @@ EOF;
                 if (!empty($typeName = $identifierTypes[$index]))
                 {
                   // Create new accession identifier type term, if necessary
-                  if (empty($typeId = array_search_case_insensitive($typeName, $self->status['alternativeIdentifierTypes'][$self->columnValue('culture')])))
+                  if (empty($typeId = Qubit::arraySearchCaseInsensitive($typeName, $self->status['alternativeIdentifierTypes'][$self->columnValue('culture')])))
                   {
                     $term = new QubitTerm;
                     $term->parentId = QubitTerm::ROOT_ID;
@@ -407,7 +407,7 @@ EOF;
       if ($data)
       {
         $data = trim($data);
-        $resourceTypeId = array_search_case_insensitive($data, $self->status['resourceTypes'][$self->columnValue('culture')]);
+        $resourceTypeId = Qubit::arraySearchCaseInsensitive($data, $self->status['resourceTypes'][$self->columnValue('culture')]);
 
         if ($resourceTypeId === false)
         {
@@ -431,7 +431,7 @@ EOF;
       if ($data)
       {
         $data = trim($data);
-        $acquisitionTypeId = array_search_case_insensitive($data, $self->status['acquisitionTypes'][$self->columnValue('culture')]);
+        $acquisitionTypeId = Qubit::arraySearchCaseInsensitive($data, $self->status['acquisitionTypes'][$self->columnValue('culture')]);
 
         if ($acquisitionTypeId === false)
         {

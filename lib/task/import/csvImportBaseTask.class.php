@@ -352,7 +352,7 @@ abstract class csvImportBaseTask extends arBaseTask
           $type = 'Box';
         }
 
-        $physicalObjectTypeId = array_search_case_insensitive($type, $self->status['physicalObjectTypes'][$self->columnValue('culture')]);
+        $physicalObjectTypeId = Qubit::arraySearchCaseInsensitive($type, $self->status['physicalObjectTypes'][$self->columnValue('culture')]);
 
         // Create new physical object type if not found
         if ($physicalObjectTypeId === false)

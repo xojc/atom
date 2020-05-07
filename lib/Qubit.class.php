@@ -452,4 +452,17 @@ class Qubit
       }
     }, $mask);
   }
+
+  /**
+   * Search an array of text values, ignoring case.
+   *
+   * @param str $search  value to search for
+   * @param array $array  array in which to search
+   *
+   * @return mixed  key of found value or FALSE otherwise
+   */
+  function arraySearchCaseInsensitive($search, $array)
+  {
+    return array_search(strtolower($search), array_map('strtolower', $array));
+  }
 }

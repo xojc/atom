@@ -505,7 +505,7 @@ EOF;
         {
           $levelOfDetail = trim($self->rowStatusVars['levelOfDetail']);
 
-          $levelOfDetailTermId = array_search_case_insensitive($levelOfDetail, $self->status['levelOfDetailTypes'][$self->columnValue('culture')]);
+          $levelOfDetailTermId = Qubit::arraySearchCaseInsensitive($levelOfDetail, $self->status['levelOfDetailTypes'][$self->columnValue('culture')]);
           if ($levelOfDetailTermId === false)
           {
             print "\nTerm $levelOfDetail not found in description details level taxonomy, creating it...\n";
@@ -538,7 +538,7 @@ EOF;
         if (isset($self->rowStatusVars['descriptionStatus']) && 0 < strlen($self->rowStatusVars['descriptionStatus']))
         {
           $descStatus = trim($self->rowStatusVars['descriptionStatus']);
-          $statusTermId = array_search_case_insensitive($descStatus, $self->status['descriptionStatusTypes'][$self->columnValue('culture')]);
+          $statusTermId = Qubit::arraySearchCaseInsensitive($descStatus, $self->status['descriptionStatusTypes'][$self->columnValue('culture')]);
 
           if (false !== $statusTermId)
           {
@@ -558,7 +558,7 @@ EOF;
         // Set publication status
         if (isset($self->rowStatusVars['publicationStatus']) && 0 < strlen($self->rowStatusVars['publicationStatus']))
         {
-          $pubStatusTermId = array_search_case_insensitive(
+          $pubStatusTermId = Qubit::arraySearchCaseInsensitive(
             $self->rowStatusVars['publicationStatus'],
             $self->status['pubStatusTypes'][trim($self->columnValue('culture'))]
           );
@@ -999,7 +999,7 @@ EOF;
         foreach ($data as $value)
         {
           $value = trim($value);
-          $materialTypeId = array_search_case_insensitive($value, $self->status['materialTypes'][$self->columnValue('culture')]);
+          $materialTypeId = Qubit::arraySearchCaseInsensitive($value, $self->status['materialTypes'][$self->columnValue('culture')]);
 
           if ($materialTypeId !== false)
           {
@@ -1072,11 +1072,6 @@ EOF;
       $io->addProperty($altIdLabels[$i], $altIds[$i], array('scope' => 'alternativeIdentifiers'));
     }
   }
-}
-
-function array_search_case_insensitive($search, $array)
-{
-  return array_search(strtolower($search), array_map('strtolower', $array));
 }
 
 /**
