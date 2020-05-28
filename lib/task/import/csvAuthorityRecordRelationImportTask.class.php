@@ -143,8 +143,10 @@ EOF;
             if (!$this->relationshipExists($sourceActor->id, $targetActor->id, $relationTypeId))
             {
               $relation = new QubitRelation;
-              $relation->objectId  = $sourceActor->id;
-              $relation->subjectId = $targetActor->id;
+
+              // Note that the column names don't map to the internal representation
+              $relation->objectId  = $targetActor->id;
+              $relation->subjectId = $sourceActor->id;
               $relation->typeId    = $relationTypeId;
 
               // Set relationship properties from column values
